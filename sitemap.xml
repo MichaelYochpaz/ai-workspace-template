@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://michaelyochpaz.github.io/ai-workspace-template/</loc>
+         <lastmod>2026-02-06</lastmod>
+    </url>
+    <url>
+         <loc>https://michaelyochpaz.github.io/ai-workspace-template/ci-recommendations/</loc>
+         <lastmod>2026-02-06</lastmod>
+    </url>
+    <url>
+         <loc>https://michaelyochpaz.github.io/ai-workspace-template/configuration/</loc>
+         <lastmod>2026-02-06</lastmod>
+    </url>
+    <url>
+         <loc>https://michaelyochpaz.github.io/ai-workspace-template/getting-started/</loc>
+         <lastmod>2026-02-06</lastmod>
+    </url>
+    <url>
+         <loc>https://michaelyochpaz.github.io/ai-workspace-template/features/agent-docs/</loc>
+         <lastmod>2026-02-06</lastmod>
+    </url>
+    <url>
+         <loc>https://michaelyochpaz.github.io/ai-workspace-template/features/commands/</loc>
+         <lastmod>2026-02-06</lastmod>
+    </url>
+    <url>
+         <loc>https://michaelyochpaz.github.io/ai-workspace-template/features/skills/</loc>
+         <lastmod>2026-02-06</lastmod>
+    </url>
+    <url>
+         <loc>https://michaelyochpaz.github.io/ai-workspace-template/features/tool-discovery/</loc>
+         <lastmod>2026-02-06</lastmod>
+    </url>
+</urlset>
