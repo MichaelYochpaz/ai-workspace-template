@@ -1,0 +1,31 @@
+[repositories]
+# Repository status reporting (used by repository_status.py)
+include_workspace_root = false       # Include workspace root repo in session status
+
+[tools]
+# Tool discovery behavior (used by tool_discovery.py)
+show_unavailable = false  # Show all tools with availability status (false = only available)
+
+[features]
+# Enable/disable workspace features
+skills = true
+commands = true
+agent_docs = true
+
+[distribution]
+# Target directories for skills symlinks
+skills_paths = [
+    ".opencode/skill",
+]
+
+# Target directories for commands (all use symlink by default)
+commands_paths = [
+    ".claude/commands",
+    ".cursor/commands",
+    ".opencode/command",
+]
+
+# Override distribution method for specific paths
+# Valid methods: "symlink" (default), "strip_frontmatter"
+[distribution.commands_overrides]
+".cursor/commands" = "strip_frontmatter"

@@ -1,0 +1,99 @@
+# Sourced from https://github.com/github/gitignore/blob/main/Python.gitignore
+# (trimmed to entries relevant to this project)
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# uv
+uv.lock
+
+# PEP 582
+__pypackages__/
+
+# Type checkers / linters
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# Cython debug symbols
+cython_debug/
+
+# Editors / IDEs
+.idea/
+.vscode/
+
+# -------------------------------------------------------------------
+# ai-workspace-template specific
+# -------------------------------------------------------------------
+
+# Exception: .ai-workspace/lib/ contains project source code, not a Python packaging artifact.
+!.ai-workspace/lib/
+
+# Zensical documentation build output
+/site
+/.ai-workspace/site
+
+# Temporary files and directories used by AI agents.
+# Ignore all content in .tmp/, but keep the directory itself.
+.tmp/*
+!/.tmp/.gitkeep
+!/.tmp/README.md

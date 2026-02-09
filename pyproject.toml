@@ -1,0 +1,17 @@
+[project]
+name = "ai-workspace-template"
+version = "1.0.0"
+description = "A meta-repository that aggregates related repositories into a single AI-focused workspace using git submodules."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "jinja2>=3.1.6",
+    "pydantic>=2.12.5",
+    "pyyaml>=6.0.3",
+]
+[dependency-groups]
+dev = [
+    "zensical>=0.0.21",
+    "pre-commit>=4.3.0",
+    "pytest>=9.0.1",
+]

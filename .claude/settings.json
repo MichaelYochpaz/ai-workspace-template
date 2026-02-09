@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "uv run \"$CLAUDE_PROJECT_DIR/.ai-workspace/scripts/session-start.py\"",
+            "statusMessage": "Initializing session...",
+            "timeout": 120,
+            "type": "command"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+/* Center the last card when there's an odd number in a 2-column grid */
+.grid.cards > ul > li:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  max-width: 50%;
+  justify-self: center;
+}
