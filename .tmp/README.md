@@ -4,7 +4,7 @@ A git-ignored workspace for AI agents to store transient artifacts, design docum
 
 ## How It Works
 
-AI agents create task-specific subdirectories (format: `YYYYMMDD-xxxx`) at the start of each task to keep artifacts organized. When a task delegates to subtasks, the parent task's directory path is passed along so all related work stays together. This prevents the directory from becoming cluttered with mixed artifacts from unrelated tasks.
+AI agents create task-specific subdirectories at the start of each task to keep artifacts organized. When a task delegates to subtasks, the parent task's directory path is passed along so all related work stays together. This prevents the directory from becoming cluttered with mixed artifacts from unrelated tasks.
 
 The [`.ai-workspace/scripts/mktmpdir.py`](../.ai-workspace/scripts/mktmpdir.py) helper script automates directory creation for agents.
 
