@@ -88,6 +88,9 @@ cython_debug/
 # Exception: .ai-workspace/lib/ contains project source code, not a Python packaging artifact.
 !.ai-workspace/lib/
 
+# Exception: repositories/ contains git submodules, not Python packaging artifacts.
+!repositories/**
+
 # Zensical documentation build output
 /site
 /.ai-workspace/site
