@@ -163,7 +163,7 @@ See [Commands](features/commands.md#distribution) for more details on how distri
 
 Configuration is applied at two points:
 
-1. **Pre-commit** (`align-workspace.py`) - Reads `ai-workspace.toml` and:
+1. **Alignment script** (`align-workspace.py`) - Reads `ai-workspace.toml` and:
     - Manages feature directories (create/remove based on `[features]`)
     - Renders `AGENTS.md` from the Jinja2 template
     - Runs skill and command validators
@@ -172,11 +172,16 @@ Configuration is applied at two points:
     - Reports repository status based on `[repositories]` settings
     - Discovers tools based on `[tools]` settings
 
-After changing `ai-workspace.toml`, run pre-commit to apply:
+After changing `ai-workspace.toml`, run the alignment script to apply changes, then validate with pre-commit:
 
 ```bash
+uv run .ai-workspace/scripts/align-workspace.py
 uv run pre-commit run --all-files
 ```
+
+!!! note
+
+    Pre-commit hooks verify that the workspace is aligned but do not apply changes. The alignment script must be run separately before committing.
 
 ## AGENTS.md generation
 

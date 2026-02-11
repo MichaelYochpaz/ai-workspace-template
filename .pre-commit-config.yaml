@@ -2,8 +2,8 @@ repos:
   - repo: local
     hooks:
       - id: align-workspace
-        name: Align workspace configuration
-        entry: uv run .ai-workspace/scripts/align-workspace.py
+        name: Verify workspace alignment
+        entry: uv run .ai-workspace/scripts/align-workspace.py --check
         language: system
         pass_filenames: false
         always_run: true

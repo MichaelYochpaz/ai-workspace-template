@@ -116,9 +116,10 @@ Run the session-start script manually to verify everything works:
 uv run .ai-workspace/scripts/session-start.py
 ```
 
-Then run pre-commit to validate the workspace:
+Then run the alignment script and pre-commit to validate the workspace:
 
 ```bash
+uv run .ai-workspace/scripts/align-workspace.py
 uv run pre-commit run --all-files
 ```
 

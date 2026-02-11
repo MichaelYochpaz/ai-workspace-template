@@ -94,7 +94,10 @@ For more information, see [`skills/README.md`](skills/README.md).
 
 ## Configuration
 
-This workspace is configured via `ai-workspace.toml` at the repository root. Changes are applied by pre-commit hooks.
+This workspace is configured via `ai-workspace.toml` at the repository root. After changing configuration, agent docs, or `AGENTS.project.md`, regenerate workspace files:
+```bash
+uv run .ai-workspace/scripts/align-workspace.py
+```
 
 For configuration reference, see [`.ai-workspace/README.md`](.ai-workspace/README.md).
 
@@ -107,10 +110,12 @@ Pre-commit hooks are configured to maintain code quality and documentation consi
 uv run pre-commit install
 ```
 
-**Recommended workflow:** After completing tasks, run pre-commit to validate changes and trigger automatic workflows:
+**Recommended workflow:** After completing tasks, run pre-commit to validate the workspace:
 ```bash
 uv run pre-commit run --all-files
 ```
+
+Pre-commit verifies that `AGENTS.md` and feature directories are in sync with configuration. If verification fails, run the alignment script above and stage the updated files.
 
 ## Temporary Files
 

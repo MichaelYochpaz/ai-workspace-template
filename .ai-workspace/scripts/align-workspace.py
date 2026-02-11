@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Align workspace configuration with ai-workspace.toml."""
 
+import argparse
 import shutil
 import subprocess
 import sys
@@ -16,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "lib"))
 from config import AIWorkspaceConfig, load_config
 
 PLACEHOLDER_TAG = "<placeholder>"
+FIX_COMMAND = "uv run .ai-workspace/scripts/align-workspace.py"
 
 
 @dataclass
@@ -40,8 +42,14 @@ def is_safe_to_remove(dir_path: Path, readme_name: str = "README.md") -> bool:
     return False
 
 
-def manage_features(config: AIWorkspaceConfig, base_dir: Path) -> None:
-    """Ensure feature directories match config."""
+def manage_features(
+    config: AIWorkspaceConfig, base_dir: Path, *, check: bool = False
+) -> list[str]:
+    """Ensure feature directories match config.
+
+    In check mode, returns a list of issues found without modifying anything.
+    In normal mode, applies changes and returns an empty list.
+    """
     features = [
         ("skills", config.features.skills, "skills-readme.md"),
         ("commands", config.features.commands, "commands-readme.md"),
@@ -49,6 +57,7 @@ def manage_features(config: AIWorkspaceConfig, base_dir: Path) -> None:
     ]
 
     template_dir = base_dir / ".ai-workspace/templates"
+    issues = []
 
     for dir_name, enabled, template_name in features:
         dir_path = base_dir / dir_name
@@ -56,24 +65,32 @@ def manage_features(config: AIWorkspaceConfig, base_dir: Path) -> None:
         readme_path = dir_path / "README.md"
 
         if enabled:
-            dir_path.mkdir(exist_ok=True)
-            if not readme_path.exists() and template_path.exists():
-                shutil.copy(template_path, readme_path)
-                print(f"Created {readme_path}")
+            if check:
+                if not dir_path.exists():
+                    issues.append(f"Feature directory '{dir_name}/' is missing")
+            else:
+                dir_path.mkdir(exist_ok=True)
+                if not readme_path.exists() and template_path.exists():
+                    shutil.copy(template_path, readme_path)
+                    print(f"Created {readme_path}")
         else:
             if dir_path.exists():
                 if is_safe_to_remove(dir_path):
-                    shutil.rmtree(dir_path)
-                    print(f"Removed {dir_path}/ (feature disabled)")
+                    if check:
+                        issues.append(
+                            f"Feature directory '{dir_name}/' should be removed"
+                            " (feature disabled)"
+                        )
+                    else:
+                        shutil.rmtree(dir_path)
+                        print(f"Removed {dir_path}/ (feature disabled)")
                 else:
                     raise ValueError(
                         f"Cannot disable {dir_name}: directory has user content. "
                         f"Remove contents manually or keep feature enabled."
                     )
 
-
-
-
+    return issues
 
 
 def normalize_text(text: str) -> str:
@@ -222,8 +239,8 @@ def load_project_content(base_dir: Path) -> str | None:
     return content.strip()
 
 
-def render_agents_md(config: AIWorkspaceConfig, base_dir: Path) -> None:
-    """Render AGENTS.md from template."""
+def render_agents_md_content(config: AIWorkspaceConfig, base_dir: Path) -> str:
+    """Render AGENTS.md content from template and return as string."""
     template_dir = base_dir / ".ai-workspace/templates"
     env = Environment(
         loader=FileSystemLoader(template_dir),
@@ -264,12 +281,30 @@ def render_agents_md(config: AIWorkspaceConfig, base_dir: Path) -> None:
         "project_content": project_content,
     }
 
-    rendered = template.render(**context)
+    return template.render(**context)
 
-    # Write AGENTS.md
+
+def render_agents_md(config: AIWorkspaceConfig, base_dir: Path) -> None:
+    """Render and write AGENTS.md."""
+    rendered = render_agents_md_content(config, base_dir)
     agents_md_path = base_dir / "AGENTS.md"
     agents_md_path.write_text(rendered, encoding="utf-8")
     print(f"Generated {agents_md_path}")
+
+
+def check_agents_md(config: AIWorkspaceConfig, base_dir: Path) -> list[str]:
+    """Check if AGENTS.md is up to date. Returns list of issues."""
+    rendered = render_agents_md_content(config, base_dir)
+    agents_md_path = base_dir / "AGENTS.md"
+
+    if not agents_md_path.exists():
+        return ["AGENTS.md does not exist"]
+
+    current = agents_md_path.read_text(encoding="utf-8")
+    if current != rendered:
+        return ["AGENTS.md is out of sync with source files"]
+
+    return []
 
 
 def run_validators(config: AIWorkspaceConfig, base_dir: Path) -> None:
@@ -290,11 +325,23 @@ def run_validators(config: AIWorkspaceConfig, base_dir: Path) -> None:
 
 
 def main():
-    print("Aligning workspace configuration...")
-    print()
+    parser = argparse.ArgumentParser(description="Align workspace configuration.")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Verify workspace is aligned without modifying files.",
+    )
+    args = parser.parse_args()
 
     # Scripts are in .ai-workspace/scripts/, so go up two levels
     base_dir = Path(__file__).parent.parent.parent
+
+    if args.check:
+        print("Verifying workspace alignment...")
+        print()
+    else:
+        print("Aligning workspace configuration...")
+        print()
 
     # 1. Load and validate config
     try:
@@ -306,19 +353,37 @@ def main():
 
     # 2. Manage feature directories
     try:
-        manage_features(config, base_dir)
+        issues = manage_features(config, base_dir, check=args.check)
     except ValueError as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    # 3. Render AGENTS.md
-    render_agents_md(config, base_dir)
+    if args.check:
+        # 3. Check AGENTS.md
+        issues.extend(check_agents_md(config, base_dir))
 
-    # 4. Run validators
-    run_validators(config, base_dir)
+        # 4. Run validators
+        run_validators(config, base_dir)
 
-    print()
-    print("Workspace alignment complete.")
+        if issues:
+            print()
+            for issue in issues:
+                print(f"  - {issue}")
+            print()
+            print(f"Run to fix: {FIX_COMMAND}")
+            sys.exit(1)
+        else:
+            print()
+            print("Workspace is aligned.")
+    else:
+        # 3. Render AGENTS.md
+        render_agents_md(config, base_dir)
+
+        # 4. Run validators
+        run_validators(config, base_dir)
+
+        print()
+        print("Workspace alignment complete.")
 
 
 if __name__ == "__main__":

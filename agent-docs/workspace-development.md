@@ -35,14 +35,16 @@ Follow these when contributing to the workspace:
 The workspace is configured via `ai-workspace.toml` at the repository root.
 
 Configuration is applied at two points:
-1. **Pre-commit** (`align-workspace.py`) - Manages feature directories, regenerates AGENTS.md, validates skills/commands
+1. **Alignment script** (`align-workspace.py`) - Manages feature directories, regenerates AGENTS.md, validates skills/commands
 2. **Session start** (`session-start.py`) - Reports repository status, discovers CLI tools
 
-After changing config, apply with:
+After changing config, agent docs, or `AGENTS.project.md`, regenerate workspace files:
 
 ```bash
-uv run pre-commit run --all-files
+uv run .ai-workspace/scripts/align-workspace.py
 ```
+
+Pre-commit hooks verify alignment on every commit (see [Pre-commit](#pre-commit) below) but do not apply changes. Run the script above before committing.
 
 For the full configuration reference, see `.ai-workspace/docs/configuration.md`.
 
