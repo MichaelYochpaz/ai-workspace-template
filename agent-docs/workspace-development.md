@@ -105,6 +105,14 @@ Reusable agent capabilities following the [Agent Skills specification](https://a
 
 Skills are distributed to tool-specific directories via symlinks, configured in `ai-workspace.toml` under `distribution.skills_paths`. The transpile script validates frontmatter and creates the symlinks.
 
+After creating or modifying skills, validate and distribute them, by running:
+
+```bash
+uv run .ai-workspace/scripts/transpile-skills.py
+```
+
+This validates skill structure and creates symlinks to tool-specific directories. Use `--validate` only when checking structure without distributing (e.g., during iterative development).
+
 See `skills/README.md` for how to create and validate skills.
 
 ### Commands
@@ -112,6 +120,14 @@ See `skills/README.md` for how to create and validate skills.
 Reusable AI prompts invoked via `/command` syntax. Each command lives in `commands/<name>/command.md` with YAML frontmatter (at minimum a `description` field) followed by the prompt content. Commands are written once and distributed to multiple tool-specific directories, so the same command works across different AI tools.
 
 Distribution targets and methods are configured in `ai-workspace.toml` under `distribution.commands_paths` and `distribution.commands_overrides`. By default, commands are symlinked; tools that don't parse frontmatter metadata need the `strip_frontmatter` distribution method configured via overrides.
+
+After creating or modifying commands, validate and distribute them, by running:
+
+```bash
+uv run .ai-workspace/scripts/transpile-commands.py
+```
+
+This validates command structure and distributes to tool-specific directories. Use `--validate` only when checking structure without distributing (e.g., during iterative development).
 
 See `commands/README.md` for how to create commands and configure distribution.
 
