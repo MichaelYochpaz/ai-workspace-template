@@ -24,14 +24,13 @@ nav = [
 ]
 
 extra_css = ["stylesheets/custom.css"]
-
-[project.repo]
-url = "https://github.com/MichaelYochpaz/ai-workspace-template"
-name = "MichaelYochpaz/ai-workspace-template"
+repo_url = "https://github.com/MichaelYochpaz/ai-workspace-template"
+repo_name = "MichaelYochpaz/ai-workspace-template"
 
 [project.theme]
 logo = "images/icon.png"
 favicon = "images/icon.png"
+icon.repo = "fontawesome/brands/github"
 features = [
     "search.highlight",
     "search.suggest",
