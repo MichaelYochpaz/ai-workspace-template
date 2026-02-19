@@ -57,7 +57,7 @@ For the full configuration reference, see `.ai-workspace/docs/configuration.md`.
 | Project-specific agent instructions | `AGENTS.project.md` (repo root) |
 | Workspace-level structure/instructions | `.ai-workspace/templates/AGENTS.md.j2` |
 
-`AGENTS.project.md` content is injected under a "Project-Specific Context" heading. Remove the `<placeholder>` tags when adding content.
+`AGENTS.project.md` content is wrapped in `<project-context>` tags. Remove the `<placeholder>` tags when adding content.
 
 Regenerate manually:
 
