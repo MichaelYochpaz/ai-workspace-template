@@ -166,17 +166,24 @@ def validate_commands(base_dir: Path) -> tuple[list[Command], list[str]]:
 
 
 def create_symlink(source: Path, target: Path) -> str:
-    """Create or update a symlink. Returns status."""
+    """Create or update a symlink using a relative path. Returns status."""
     target.parent.mkdir(parents=True, exist_ok=True)
+
+    rel_path = source.resolve().relative_to(target.parent.resolve(), walk_up=True)
 
     if target.is_symlink():
         if target.resolve() == source.resolve():
-            return "unchanged"
-        target.unlink()
+            # Recreate if currently absolute but should be relative
+            if Path(target.readlink()).is_absolute():
+                target.unlink()
+            else:
+                return "unchanged"
+        else:
+            target.unlink()
     elif target.exists():
         return "skipped (not a symlink)"
 
-    target.symlink_to(source.resolve())
+    target.symlink_to(rel_path)
     return "created"
 
 
