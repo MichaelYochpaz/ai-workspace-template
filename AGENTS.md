@@ -10,13 +10,13 @@ This is a **meta-repository** that aggregates related repositories using git sub
 These requirements ALWAYS apply. Follow them throughout every task - some apply at task start, others when specific situations arise:
 
 1. **Read relevant documentation first** - Before taking action on any task:
-   - Review the [Agent Docs](#agent-docs) list below
-   - Read ALL documents relevant to your task before proceeding
-   - Re-evaluate after encountering failures or gaining new insights—additional documents may become relevant
+   - Review the [Agent Docs](#agent-docs) list below and read all documents relevant to your task before proceeding
+   - When the task scope depends on an external resource (Jira ticket, PR, error log), fetch that resource first to understand the task, then select and read relevant documents based on what you learned
+   - Re-evaluate relevance after encountering failures or gaining new insights — additional documents may become relevant
 
 2. **Use `uv` for Python execution** - Execute all scripts and tools with `uv run <script/tool>`. This workspace exclusively uses `uv` for package and environment management. For scripts with inline dependencies (PEP 723), run them directly (`uv run script.py`) to ensure dependencies resolve correctly.
 
-3. **Use available skills** - Check if relevant skills are available in your environment for your tasks, and if there are - utilize them.
+3. **Use available skills** - Review all available skill descriptions and match them to the task's underlying objective, including when decomposing into subtasks. Reference matching skills as available resources. Use matching skills instead of manual approaches.
 
 4. **Verify before diagnosing** - When analyzing failures or investigating issues, use documentation and available tools to verify facts. Provide diagnoses **ONLY after verification**.
 
