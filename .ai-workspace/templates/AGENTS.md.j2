@@ -39,7 +39,7 @@ The [`agent-docs/`](agent-docs/) directory contains modular, task-focused docume
 3. **Read ALL identified relevant documents before proceeding**
 4. **Re-evaluate relevance whenever you gain new insights** during the task - when discoveries change your understanding, immediately check if additional documents are now relevant
 
-For more information, see [`agent-docs/README.md`](agent-docs/README.md).
+When creating or modifying docs, read [`agent-docs/README.md`](agent-docs/README.md) first.
 
 ### Agent Docs
 
@@ -78,7 +78,7 @@ In addition to environment-provided capabilities (e.g., tools, MCPs, Skills), th
 
 The [`commands/`](commands/) directory contains cross-tool AI commands invoked by humans via `/command` syntax. Commands are distributed to IDE command directories via [`.ai-workspace/scripts/transpile-commands.py`](.ai-workspace/scripts/transpile-commands.py).
 
-For more information, see [`commands/README.md`](commands/README.md).
+When creating or modifying commands, read [`commands/README.md`](commands/README.md) first.
 </commands-section>
 {% endif %}
 {% if features.skills.enabled and features.skills.count > 0 %}
@@ -88,7 +88,7 @@ For more information, see [`commands/README.md`](commands/README.md).
 
 The [`skills/`](skills/) directory contains reusable agent skills following the [Agent Skills specification](https://agentskills.io/specification). Skills are distributed to IDE-specific directories via [`.ai-workspace/scripts/transpile-skills.py`](.ai-workspace/scripts/transpile-skills.py).
 
-For more information, see [`skills/README.md`](skills/README.md).
+When creating or modifying skills, read [`skills/README.md`](skills/README.md) first.
 </skills-section>
 {% endif %}
 

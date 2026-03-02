@@ -24,14 +24,19 @@ when: |
 
 `description` - What problems this doc solves (helps agents decide relevance).
 
-`when` - **Critical field.** Agents scan this at task start to decide whether to read the doc - vague conditions cause agents to skip it. Write specific triggers: task types, codebase areas, error scenarios. Include a few illustrative examples (file paths, error messages) to aid matching, but frame them as examples so agents don't dismiss the doc when their exact case isn't listed.
+`when` - **Critical field.** Agents scan this at task start to decide whether to read the doc — vague conditions cause agents to skip it. Write triggers that cover multiple discovery paths:
+- **Task-driven** — specific tasks the agent is performing (e.g., "when adding API endpoints that require auth")
+- **Problem-driven** — problems the agent is trying to solve, before they know the solution (e.g., "when a package needs to be built differently from its defaults")
+- **Terminology-driven** — domain terms the agent might encounter in code, logs, or other docs (e.g., "when encountering references to build overrides or patches in builder context")
 
-**Weak** (too vague - agents can't match this to concrete tasks):
+Include a few illustrative examples (file paths, error messages) to aid matching, but frame them as examples so agents don't dismiss the doc when their exact case isn't listed.
+
+**Weak** (too vague — agents can't match this to concrete tasks):
 ```yaml
 when: When working with the API.
 ```
 
-**Strong** (specific conditions with illustrative examples):
+**Strong** (multiple discovery paths):
 ```yaml
 when: |
   When modifying API authentication or authorization logic.

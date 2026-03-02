@@ -34,7 +34,7 @@ The [`agent-docs/`](agent-docs/) directory contains modular, task-focused docume
 3. **Read ALL identified relevant documents before proceeding**
 4. **Re-evaluate relevance whenever you gain new insights** during the task - when discoveries change your understanding, immediately check if additional documents are now relevant
 
-For more information, see [`agent-docs/README.md`](agent-docs/README.md).
+When creating or modifying docs, read [`agent-docs/README.md`](agent-docs/README.md) first.
 
 ### Agent Docs
 
