@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run \"$(git rev-parse --show-toplevel)/.ai-workspace/scripts/session-start.py\" --tool codex",
+            "timeout": 120,
+            "statusMessage": "Initializing session..."
+          }
+        ]
+      }
+    ]
+  }
+}

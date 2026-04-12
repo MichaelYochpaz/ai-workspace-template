@@ -15,12 +15,13 @@ The output is wrapped in `<session-context>` XML tags that agents consume automa
 
 Hook configurations are committed to the repo and work out of the box for these tools:
 
-| Tool | Config location |
-|------|----------------|
-| **Claude Code** | `.claude/settings.json` |
-| **OpenCode** | `.opencode/plugins/session-sync.ts` |
-| **Cursor** | `.cursor/hooks.json` |
-| **Gemini CLI** | `.gemini/settings.json` |
+| Tool | Config location | Notes |
+|------|----------------|-------|
+| **Claude Code** | `.claude/settings.json` | |
+| **Codex CLI** | `.codex/hooks.json` | Experimental; requires feature flag in `.codex/config.toml`. Windows support currently disabled by Codex. |
+| **OpenCode** | `.opencode/plugins/session-sync.ts` | |
+| **Cursor** | `.cursor/hooks.json` | |
+| **Gemini CLI** | `.gemini/settings.json` | |
 
 !!! info "Other AI tools"
 
@@ -36,10 +37,11 @@ The session-start script supports two output modes:
 uv run .ai-workspace/scripts/session-start.py
 ```
 
-**JSON** (`--tool <name>`) - For tools that require a JSON hook protocol (Claude Code, Cursor, Gemini CLI). Each tool has its own expected JSON schema:
+**JSON** (`--tool <name>`) - For tools that require a JSON hook protocol (Claude Code, Codex CLI, Cursor, Gemini CLI). Each tool has its own expected JSON schema:
 
 ```bash
 echo '{}' | uv run .ai-workspace/scripts/session-start.py --tool claude
+echo '{}' | uv run .ai-workspace/scripts/session-start.py --tool codex
 echo '{}' | uv run .ai-workspace/scripts/session-start.py --tool cursor
 echo '{}' | uv run .ai-workspace/scripts/session-start.py --tool gemini
 ```
@@ -57,6 +59,7 @@ Open `.ai-workspace/scripts/session-start.py` and add an entry to the `FORMATTER
 ```python
 FORMATTERS = {
     "claude": lambda ctx: {"hookSpecificOutput": {"additionalContext": ctx}},
+    "codex": lambda ctx: {"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": ctx}},
     "cursor": lambda ctx: {"additional_context": ctx},
     "gemini": lambda ctx: {"hookSpecificOutput": {"additionalContext": ctx}},
     "newtool": lambda ctx: {"context": ctx},  # Match the tool's schema
@@ -81,7 +84,7 @@ If the tool captures stdout as plain text (no JSON protocol), skip step 1 and ca
 
 - **Stale repository status.** If repo state changes after the last hook execution (branches switched externally, new commits pushed by others, or changes made by parallel agents), the injected context no longer reflects reality. Agents are instructed to verify repo state with git commands before branch switches or destructive operations.
 
-- **Resume behavior varies by tool.** Some tools re-run hooks when resuming a session (Claude Code and Gemini CLI include `resume` in their hook matchers). Others may serve the original cached output. If a tool's hook config does not specify resume behavior, the agent may start a resumed session with outdated context.
+- **Resume behavior varies by tool.** Some tools re-run hooks when resuming a session (Claude Code, Codex CLI, and Gemini CLI include `resume` in their hook matchers). Others may serve the original cached output. If a tool's hook config does not specify resume behavior, the agent may start a resumed session with outdated context.
 
 - **Parallel agents on a shared workspace.** Multiple agents operating on the same workspace can cause race conditions — one agent may switch a branch while another still operates based on the original session-start context. This is a fundamental limitation of shared-filesystem concurrency, not specific to this workspace.
 

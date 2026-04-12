@@ -34,6 +34,12 @@ from tool_discovery import run_tool_discovery
 # matching the tool's expected sessionStart output schema.
 FORMATTERS: dict[str, Any] = {
     "claude": lambda ctx: {"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": ctx}},
+    "codex": lambda ctx: {
+        "hookSpecificOutput": {
+            "hookEventName": "SessionStart",
+            "additionalContext": ctx,
+        }
+    },
     "cursor": lambda ctx: {"additional_context": ctx},
     "gemini": lambda ctx: {"hookSpecificOutput": {"additionalContext": ctx}},
 }
@@ -45,6 +51,7 @@ FORMATTERS: dict[str, Any] = {
 # 10,000 characters; we use 9,500 to leave headroom for minor overhead.
 OUTPUT_LIMITS: dict[str, int] = {
     "claude": 9500,
+    # codex: no documented output limit as of 2026-04 (hooks are experimental)
 }
 
 
