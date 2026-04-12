@@ -30,15 +30,16 @@ Hook configurations are committed to the repo and work out of the box for these 
 
 The session-start script supports two output modes:
 
-**Plain text** (default) - For tools that capture stdout directly (Claude Code, OpenCode). Run with no arguments:
+**Plain text** (default) - For tools that capture stdout directly (OpenCode). Run with no arguments:
 
 ```bash
 uv run .ai-workspace/scripts/session-start.py
 ```
 
-**JSON** (`--tool <name>`) - For tools that require a JSON hook protocol (Cursor, Gemini CLI). Each tool has its own expected JSON schema:
+**JSON** (`--tool <name>`) - For tools that require a JSON hook protocol (Claude Code, Cursor, Gemini CLI). Each tool has its own expected JSON schema:
 
 ```bash
+echo '{}' | uv run .ai-workspace/scripts/session-start.py --tool claude
 echo '{}' | uv run .ai-workspace/scripts/session-start.py --tool cursor
 echo '{}' | uv run .ai-workspace/scripts/session-start.py --tool gemini
 ```
@@ -55,6 +56,7 @@ Open `.ai-workspace/scripts/session-start.py` and add an entry to the `FORMATTER
 
 ```python
 FORMATTERS = {
+    "claude": lambda ctx: {"hookSpecificOutput": {"additionalContext": ctx}},
     "cursor": lambda ctx: {"additional_context": ctx},
     "gemini": lambda ctx: {"hookSpecificOutput": {"additionalContext": ctx}},
     "newtool": lambda ctx: {"context": ctx},  # Match the tool's schema
@@ -79,6 +81,74 @@ If the tool captures stdout as plain text (no JSON protocol), skip step 1 and ca
 
 - **Stale repository status.** If repo state changes after the last hook execution (branches switched externally, new commits pushed by others, or changes made by parallel agents), the injected context no longer reflects reality. Agents are instructed to verify repo state with git commands before branch switches or destructive operations.
 
-- **Resume behavior varies by tool.** Some tools re-run hooks when resuming a session (Claude Code and Gemini CLI, via `"matcher": "startup|resume"` in their hook configs). Others may serve the original cached output. If a tool's hook config does not specify resume behavior, the agent may start a resumed session with outdated context.
+- **Resume behavior varies by tool.** Some tools re-run hooks when resuming a session (Claude Code and Gemini CLI include `resume` in their hook matchers). Others may serve the original cached output. If a tool's hook config does not specify resume behavior, the agent may start a resumed session with outdated context.
 
 - **Parallel agents on a shared workspace.** Multiple agents operating on the same workspace can cause race conditions — one agent may switch a branch while another still operates based on the original session-start context. This is a fundamental limitation of shared-filesystem concurrency, not specific to this workspace.
+
+## Output size limits
+
+Some tools cap the size of hook output injected into context. When the rendered session context exceeds a tool's limit, the tool may replace the full output with a truncated preview and a file path — losing the structured context the agent needs.
+
+To handle this gracefully, `SessionContext.render()` accepts a `max_chars` parameter. When set, it drops sections from the end and appends a truncation notice instead of exceeding the limit. Per-tool limits are defined in the `OUTPUT_LIMITS` dict in `session-start.py`.
+
+Currently known limits:
+
+| Tool | Limit | Source |
+|------|-------|--------|
+| **Claude Code** | 10,000 chars (9,500 used) | [Hooks reference](https://code.claude.com/docs/en/hooks) |
+
+When adding a new tool, check its documentation for output size constraints and add an entry to `OUTPUT_LIMITS` if applicable.
+
+## Evaluated and deferred hooks
+
+The following hook events were evaluated and intentionally deferred. This section exists to prevent re-evaluation without the original context.
+
+### CwdChanged
+
+**What it would do:** Inject submodule-specific context (e.g., AGENTS.md path, git status) when Claude changes into a submodule directory.
+
+**Why deferred:**
+
+- Fires on every `cd`, including transient directory changes for file reads — not just meaningful submodule transitions.
+- AGENTS.md already instructs agents to verify repo state and read submodule docs before taking action, covering this need via static instructions.
+- In a template repo, submodule layouts vary per instantiation. Detecting submodule boundaries requires path pattern maintenance that doesn't generalize.
+- Executing `uv run` on every directory change adds noticeable latency for interactive use.
+
+**Reconsider when:** Stale context causes recurring, documented failures that static instructions don't prevent.
+
+### FileChanged (for ai-workspace.toml)
+
+**What it would do:** Watch the workspace config file and warn Claude when it drifts from aligned state, suggesting to re-run the alignment script.
+
+**Why deferred:**
+
+- This file changes rarely and only by deliberate user action. The user who edits their own config doesn't need a hook reminder.
+- The pre-commit hooks already catch alignment drift before commits are finalized.
+- `FileChanged` fires on any matching file change, including edits Claude itself makes, creating a noisy feedback loop.
+
+**Reconsider when:** Users report committing unaligned state despite pre-commit checks, or if the workspace gains config files that change more frequently.
+
+### InstructionsLoaded
+
+**What it would do:** Inject additional context when CLAUDE.md or `.claude/rules/*.md` files are loaded into context.
+
+**Why deferred:**
+
+- No concrete use case identified. The event is primarily diagnostic.
+- AGENTS.md and session-start context already cover the instruction injection use case.
+- Adding a second context injection path increases maintenance without clear benefit.
+
+**Reconsider when:** A specific need arises to augment loaded instructions dynamically (e.g., injecting environment-specific overrides).
+
+### PreToolUse (for git submodule safety)
+
+**What it would do:** Intercept `git push`, `git submodule update --remote`, and `git pull --recurse-submodules` to enforce submodule workflow rules already documented in AGENTS.md.
+
+**Why deferred:**
+
+- Parsing git commands from bash invocations is fragile (quoted arguments, aliases, scripts that wrap git).
+- AGENTS.md already documents these rules and agents generally follow them.
+- The `if` field filter (e.g., `"Bash(git submodule update*)"`) mitigates latency but the stability of this syntax in a template repo is uncertain.
+- Adding enforcement hooks for rules that are already followed creates overhead without proportional benefit.
+
+**Reconsider when:** Agents repeatedly violate submodule workflow rules despite AGENTS.md instructions, or when the `PreToolUse` `if` syntax is well-documented and stable across Claude Code versions.

@@ -20,8 +20,14 @@ class SessionContext:
         if content:
             self._sections.append((name, content))
 
-    def render(self) -> str:
+    def render(self, max_chars: int | None = None) -> str:
         """Return all sections wrapped in <session-context> tags.
+
+        Args:
+            max_chars: Maximum character count for the output. If the
+                rendered output exceeds this limit, sections are dropped
+                from the end until it fits, with a truncation notice.
+                None means no limit.
 
         Returns empty string if no sections have content.
         """
@@ -32,7 +38,34 @@ class SessionContext:
         for _name, content in self._sections:
             parts.append(content)
         parts.append("</session-context>")
-        return "\n\n".join(parts)
+        output = "\n\n".join(parts)
+
+        if max_chars is None or len(output) <= max_chars:
+            return output
+
+        # Drop sections from the end until within limit
+        truncation_notice = (
+            "(Session context truncated due to output size limit. "
+            "{dropped} of {total} sections omitted.)"
+        )
+        total = len(self._sections)
+        sections = list(self._sections)
+        while sections:
+            sections.pop()
+            dropped = total - len(sections)
+            notice = truncation_notice.format(dropped=dropped, total=total)
+            parts = ["<session-context>"]
+            for _name, content in sections:
+                parts.append(content)
+            parts.append(notice)
+            parts.append("</session-context>")
+            candidate = "\n\n".join(parts)
+            if len(candidate) <= max_chars:
+                return candidate
+
+        # Nothing fits — return just the notice
+        notice = truncation_notice.format(dropped=total, total=total)
+        return f"<session-context>\n\n{notice}\n\n</session-context>"
 
     def print(self) -> None:
         """Print all sections wrapped in <session-context> tags.

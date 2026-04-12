@@ -4,7 +4,8 @@
       {
         "hooks": [
           {
-            "command": "uv run \"$CLAUDE_PROJECT_DIR/.ai-workspace/scripts/session-start.py\"",
+            "command": "uv run \"$CLAUDE_PROJECT_DIR/.ai-workspace/scripts/session-start.py\" --tool claude",
+            "shell": "bash",
             "statusMessage": "Initializing session...",
             "timeout": 120,
             "type": "command"
