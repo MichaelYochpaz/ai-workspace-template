@@ -2,7 +2,7 @@
 
 This directory contains the infrastructure for the AI Workspace Template.
 
-**Full documentation:** [Configuration Reference](https://michaelyochpaz.github.io/ai-workspace-template/configuration/)
+**Full documentation:** [Configuration Reference](https://ai-workspace-template.michaelyo.dev/configuration/)
 
 ## Directory Structure
 
@@ -49,7 +49,7 @@ The workspace is configured via `ai-workspace.toml` at the repository root. Key 
 | `[tools]` | Tool discovery settings |
 | `[distribution]` | Where to distribute skills/commands |
 
-See [Configuration](https://michaelyochpaz.github.io/ai-workspace-template/configuration/) for the full reference.
+See [Configuration](https://ai-workspace-template.michaelyo.dev/configuration/) for the full reference.
 
 ## Documentation Site
 

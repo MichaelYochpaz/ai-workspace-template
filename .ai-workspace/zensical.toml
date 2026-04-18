@@ -1,6 +1,6 @@
 [project]
 site_name = "AI Workspace Template"
-site_url = "https://michaelyochpaz.github.io/ai-workspace-template/"
+site_url = "https://ai-workspace-template.michaelyo.dev/"
 site_description = "Documentation for the AI Workspace Template"
 docs_dir = "docs"
 site_dir = "site"

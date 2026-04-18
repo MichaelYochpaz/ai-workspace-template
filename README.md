@@ -8,7 +8,7 @@ A unified, multi-repo workspace for AI coding agents and developers.
 
 Unified instructions, docs, skills, and commands — one source of truth across Claude Code, Cursor, OpenCode, and more.
 
-📖 [**Documentation**](https://michaelyochpaz.github.io/ai-workspace-template/)
+📖 [**Documentation**](https://ai-workspace-template.michaelyo.dev/)
 
 ## The Problem
 
@@ -46,7 +46,7 @@ flowchart TB
 
 Session hooks are pre-configured for [Claude Code](https://code.claude.com/), [Cursor](https://cursor.com/), [OpenCode](https://opencode.ai/), and [Gemini CLI](https://geminicli.com/) — they work out of the box with no setup needed.
 
-Any AI tool that reads `AGENTS.md` works with this workspace. Skills and commands can be distributed to any tool by configuring target paths in `ai-workspace.toml`. See the [Configuration](https://michaelyochpaz.github.io/ai-workspace-template/configuration/#distribution) docs for details.
+Any AI tool that reads `AGENTS.md` works with this workspace. Skills and commands can be distributed to any tool by configuring target paths in `ai-workspace.toml`. See the [Configuration](https://ai-workspace-template.michaelyo.dev/configuration/#distribution) docs for details.
 
 ## 🚀 Quick Start
 
@@ -65,18 +65,18 @@ uv run .ai-workspace/scripts/setup.py
 git submodule add <url> repositories/<name>
 ```
 
-See the [Getting Started](https://michaelyochpaz.github.io/ai-workspace-template/getting-started/) guide for detailed setup instructions.
+See the [Getting Started](https://ai-workspace-template.michaelyo.dev/getting-started/) guide for detailed setup instructions.
 
 ## 📖 Documentation
 
-Full docs at **[michaelyochpaz.github.io/ai-workspace-template](https://michaelyochpaz.github.io/ai-workspace-template/)**
+Full docs at **[ai-workspace-template.michaelyo.dev](https://ai-workspace-template.michaelyo.dev/)**
 
 | Guide | Description |
 |-------|-------------|
-| [Getting Started](https://michaelyochpaz.github.io/ai-workspace-template/getting-started/) | Setup and first steps |
-| [Repositories](https://michaelyochpaz.github.io/ai-workspace-template/repositories/) | Submodule model and status reporting |
-| [Configuration](https://michaelyochpaz.github.io/ai-workspace-template/configuration/) | `ai-workspace.toml` reference |
-| [Agent Docs](https://michaelyochpaz.github.io/ai-workspace-template/features/agent-docs/) | Writing documentation for agents |
-| [Skills](https://michaelyochpaz.github.io/ai-workspace-template/features/skills/) | Distributing agent skills across tools |
-| [Commands](https://michaelyochpaz.github.io/ai-workspace-template/features/commands/) | Distributing commands across tools |
-| [Tool Discovery](https://michaelyochpaz.github.io/ai-workspace-template/features/tool-discovery/) | CLI tool detection and context injection |
+| [Getting Started](https://ai-workspace-template.michaelyo.dev/getting-started/) | Setup and first steps |
+| [Repositories](https://ai-workspace-template.michaelyo.dev/repositories/) | Submodule model and status reporting |
+| [Configuration](https://ai-workspace-template.michaelyo.dev/configuration/) | `ai-workspace.toml` reference |
+| [Agent Docs](https://ai-workspace-template.michaelyo.dev/features/agent-docs/) | Writing documentation for agents |
+| [Skills](https://ai-workspace-template.michaelyo.dev/features/skills/) | Distributing agent skills across tools |
+| [Commands](https://ai-workspace-template.michaelyo.dev/features/commands/) | Distributing commands across tools |
+| [Tool Discovery](https://ai-workspace-template.michaelyo.dev/features/tool-discovery/) | CLI tool detection and context injection |

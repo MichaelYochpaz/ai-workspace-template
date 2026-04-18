@@ -120,7 +120,7 @@ Setup complete! Next steps:
 
   3. Edit ai-workspace.toml to configure the workspace
 
-  Docs: https://michaelyochpaz.github.io/ai-workspace-template/"""
+  Docs: https://ai-workspace-template.michaelyo.dev/"""
 
 # ---------------------------------------------------------------------------
 # Main
